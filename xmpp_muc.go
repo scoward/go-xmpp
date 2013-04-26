@@ -24,12 +24,12 @@ func (c *Client) JoinMUC(jid string) {
 		xmlEscape(jid), nsMUC)
 }
 
-func (c *Client) JoinMUCWithId(jid string, id string) {
+func (c *Client) JoinMUCWithFrom(jid string, username string) {
     fmt.Fprintf(c.tls, "<presence to='%s'\n"+
-        "id='%s'>\n"+
+        "from='%s'>\n"+
 		"<x xmlns='%s' />\n"+
 		"</presence>",
-		xmlEscape(jid), id, nsMUC)
+		xmlEscape(jid), username, nsMUC)
 }
 
 // xep-0045 7.14
