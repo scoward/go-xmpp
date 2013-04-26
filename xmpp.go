@@ -214,6 +214,10 @@ func (c *Client) init(user, passwd string) error {
 
 	// We're connected and can now receive and send messages.
 	fmt.Fprintf(c.tls, "<presence xml:lang='en'><show>xa</show><status>I for one welcome our new codebot overlords.</status></presence>")
+    fmt.Fprintf(c.tls, "<presence><c xmlns='http://jabber.org/protocol/caps'\n"+
+                       "node='http://hipchat.com/client/bot'\n"+
+                       "ver='QgayPKawpkPSDYmwT/WM94uAlu0='/>\n"+
+                       "</presence>")
 	return nil
 }
 
