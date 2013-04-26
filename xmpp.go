@@ -48,7 +48,8 @@ type Client struct {
 // NewClient creates a new connection to a host given as "hostname" or "hostname:port".
 // If host is not specified, the  DNS SRV should be used to find the host from the domainpart of the JID.
 // Default the port to 5222.
-func NewClient(host string, user string, sasluser string, passwd string) (*Client, error) {
+//func NewClient(host string, user string, sasluser string, passwd string) (*Client, error) {
+func NewClient(host, user, sasluser, passwd string) (*Client, error) {
 	addr := host
 
 	if strings.TrimSpace(host) == "" {
