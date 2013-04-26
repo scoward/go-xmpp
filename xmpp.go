@@ -202,7 +202,8 @@ func (c *Client) init(user, passwd string) error {
 	}
 
 	// Send IQ message asking to bind to the local user name.
-	fmt.Fprintf(c.tls, "<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind)
+	//fmt.Fprintf(c.tls, "<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind)
+	fmt.Fprintf(c.tls, "<iq type='set' id='x'><bind xmlns='%s'><resource>bot</resource></bind></iq>\n", nsBind)
 	var iq clientIQ
 	if err = c.p.DecodeElement(&iq, nil); err != nil {
 		return errors.New("unmarshal <iq>: " + err.Error())
@@ -213,8 +214,8 @@ func (c *Client) init(user, passwd string) error {
 	c.jid = iq.Bind.Jid // our local id
 
 	// We're connected and can now receive and send messages.
-	fmt.Fprintf(c.tls, "<presence xml:lang='en'><show>xa</show><status>I for one welcome our new codebot overlords.</status></presence>")
-    fmt.Fprintf(c.tls, "<presence><c xmlns='http://jabber.org/protocol/caps'\n"+
+	//fmt.Fprintf(c.tls, "<presence xml:lang='en'><show>xa</show><status>I for one welcome our new codebot overlords.</status></presence>")
+    fmt.Fprintf(c.tls, "<presence type='available'><show>chat</show><c xmlns='http://jabber.org/protocol/caps'\n"+
                        "node='http://hipchat.com/client/bot'\n"+
                        "ver='QgayPKawpkPSDYmwT/WM94uAlu0='/>\n"+
                        "</presence>")
