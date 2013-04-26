@@ -49,7 +49,7 @@ type Client struct {
 // If host is not specified, the  DNS SRV should be used to find the host from the domainpart of the JID.
 // Default the port to 5222.
 //func NewClient(host string, user string, sasluser string, passwd string) (*Client, error) {
-func NewClient(host, user, sasluser, passwd string) (*Client, error) {
+func NewClient(host, user, passwd string) (*Client, error) {
 	addr := host
 
 	if strings.TrimSpace(host) == "" {
@@ -107,7 +107,7 @@ func NewClient(host, user, sasluser, passwd string) (*Client, error) {
 
 	client := new(Client)
 	client.tls = tlsconn
-	if err := client.init(user, sasluser, passwd); err != nil {
+	if err := client.init(user, passwd); err != nil {
 		client.Close()
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (c *Client) Close() error {
 	return c.tls.Close()
 }
 
-func (c *Client) init(user, sasluser, passwd string) error {
+func (c *Client) init(user, passwd string) error {
 	// For debugging: the following causes the plaintext of the connection to be duplicated to stdout.
 	//c.p = xml.NewDecoder(tee{c.tls, os.Stdout})
 	c.p = xml.NewDecoder(c.tls)
@@ -164,7 +164,7 @@ func (c *Client) init(user, sasluser, passwd string) error {
 	}
 
 	// Plain authentication: send base64-encoded \x00 user \x00 password.
-	raw := sasluser + "\x00" + user + "\x00" + passwd
+	raw := "\x00" + user + "\x00" + passwd
 	enc := make([]byte, base64.StdEncoding.EncodedLen(len(raw)))
 	base64.StdEncoding.Encode(enc, []byte(raw))
 	fmt.Fprintf(c.tls, "<auth xmlns='%s' mechanism='PLAIN'>%s</auth>\n",
