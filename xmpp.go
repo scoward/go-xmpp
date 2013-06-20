@@ -37,6 +37,11 @@ const (
 	nsClient = "jabber:client"
 )
 
+func writeMessageOut(w io.Writer, str string) {
+    fmt.Printf("%s\n", str)
+    fmt.Fprintf(w, str)
+}
+
 var DefaultConfig tls.Config
 
 type Client struct {
@@ -78,9 +83,9 @@ func NewClient(host, user, passwd string) (*Client, error) {
 	}
 
 	if proxy != "" {
-		fmt.Fprintf(c, "CONNECT %s HTTP/1.1\r\n", host)
-		fmt.Fprintf(c, "Host: %s\r\n", host)
-		fmt.Fprintf(c, "\r\n")
+		writeMessageOut(c, fmt.Sprintf("CONNECT %s HTTP/1.1\r\n", host))
+		writeMessageOut(c, fmt.Sprintf("Host: %s\r\n", host))
+		writeMessageOut(c, fmt.Sprintf("\r\n"))
 		br := bufio.NewReader(c)
 		req, _ := http.NewRequest("CONNECT", host, nil)
 		resp, err := http.ReadResponse(br, req)
@@ -131,10 +136,10 @@ func (c *Client) init(user, passwd string) error {
 	domain := a[1]
 
 	// Declare intent to be a jabber client.
-	fmt.Fprintf(c.tls, "<?xml version='1.0'?>\n"+
+	writeMessageOut(c.tls, fmt.Sprintf("<?xml version='1.0'?>\n"+
 		"<stream:stream to='%s' xmlns='%s'\n"+
 		" xmlns:stream='%s' version='1.0'>\n",
-		xmlEscape(domain), nsClient, nsStream)
+		xmlEscape(domain), nsClient, nsStream))
 
 	// Server should respond with a stream opening.
 	se, err := nextStart(c.p)
@@ -167,8 +172,8 @@ func (c *Client) init(user, passwd string) error {
 	raw := "\x00" + user + "\x00" + passwd
 	enc := make([]byte, base64.StdEncoding.EncodedLen(len(raw)))
 	base64.StdEncoding.Encode(enc, []byte(raw))
-	fmt.Fprintf(c.tls, "<auth xmlns='%s' mechanism='PLAIN'>%s</auth>\n",
-		nsSASL, enc)
+	writeMessageOut(c.tls, fmt.Sprintf("<auth xmlns='%s' mechanism='PLAIN'>%s</auth>\n",
+		nsSASL, enc))
 
 	// Next message should be either success or failure.
 	name, val, err := next(c.p)
@@ -184,9 +189,9 @@ func (c *Client) init(user, passwd string) error {
 
 	// Now that we're authenticated, we're supposed to start the stream over again.
 	// Declare intent to be a jabber client.
-	fmt.Fprintf(c.tls, "<stream:stream to='%s' xmlns='%s'\n"+
+	writeMessageOut(c.tls, fmt.Sprintf("<stream:stream to='%s' xmlns='%s'\n"+
 		" xmlns:stream='%s' version='1.0'>\n",
-		xmlEscape(domain), nsClient, nsStream)
+		xmlEscape(domain), nsClient, nsStream))
 
 	// Here comes another <stream> and <features>.
 	se, err = nextStart(c.p)
@@ -203,7 +208,7 @@ func (c *Client) init(user, passwd string) error {
 
 	// Send IQ message asking to bind to the local user name.
 	//fmt.Fprintf(c.tls, "<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind)
-	fmt.Fprintf(c.tls, "<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind)
+	writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind))
 	var iq clientIQ
 	if err = c.p.DecodeElement(&iq, nil); err != nil {
 		return errors.New("unmarshal <iq>: " + err.Error())
@@ -215,10 +220,10 @@ func (c *Client) init(user, passwd string) error {
 
 	// We're connected and can now receive and send messages.
 	//fmt.Fprintf(c.tls, "<presence xml:lang='en'><show>xa</show><status>I for one welcome our new codebot overlords.</status></presence>")
-    fmt.Fprintf(c.tls, "<presence type='available'><show>chat</show><c xmlns='http://jabber.org/protocol/caps'\n"+
+    writeMessageOut(c.tls, fmt.Sprintf("<presence type='available'><show>chat</show><c xmlns='http://jabber.org/protocol/caps'\n"+
                        "node='http://hipchat.com/client/bot'\n"+
                        "ver='QgayPKawpkPSDYmwT/WM94uAlu0='/>\n"+
-                       "</presence>")
+                       "</presence>"))
 	return nil
 }
 
@@ -254,9 +259,9 @@ func (c *Client) Recv() (event interface{}, err error) {
 
 // Send sends message text.
 func (c *Client) Send(chat Chat) {
-	fmt.Fprintf(c.tls, "<message to='%s' type='%s' xml:lang='en'>"+
+	writeMessageOut(c.tls, fmt.Sprintf("<message to='%s' type='%s' xml:lang='en'>"+
 		"<body>%s</body></message>",
-		xmlEscape(chat.Remote), xmlEscape(chat.Type), xmlEscape(chat.Text))
+		xmlEscape(chat.Remote), xmlEscape(chat.Type), xmlEscape(chat.Text)))
 }
 
 // RFC 3920  C.1  Streams name space
