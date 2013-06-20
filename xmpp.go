@@ -207,8 +207,9 @@ func (c *Client) init(user, passwd string) error {
 	}
 
 	// Send IQ message asking to bind to the local user name.
-	//fmt.Fprintf(c.tls, "<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind)
-	writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind))
+	//writeMessageOut(c.tls, fmt.Sprintf("<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind))
+    writeMessageOut(c.tls, fmt.Sprintf("<iq type='set' id='x'><bind xmlns='%s'><resource>bot</resource></bind></iq>\n", nsBind))
+	//writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind))
 	var iq clientIQ
 	if err = c.p.DecodeElement(&iq, nil); err != nil {
 		return errors.New("unmarshal <iq>: " + err.Error())
