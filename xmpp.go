@@ -218,7 +218,7 @@ func (c *Client) init(user, passwd string) error {
 		return errors.New("<iq> result missing <bind>")
 	}
 	c.jid = iq.Bind.Jid // our local id
-    fmt.Printf(c.jid)
+    fmt.Printf("JID: %d\n", c.jid)
 
 	// We're connected and can now receive and send messages.
 	//fmt.Fprintf(c.tls, "<presence xml:lang='en'><show>xa</show><status>I for one welcome our new codebot overlords.</status></presence>")
@@ -455,7 +455,7 @@ func next(p *xml.Decoder) (xml.Name, interface{}, error) {
 	if err = p.DecodeElement(nv, &se); err != nil {
 		return xml.Name{}, nil, err
 	}
-    fmt.Printf("%+v, %+v", nv, se)
+    fmt.Printf("%+v, %+v\n\n", nv, se)
 	return se.Name, nv, err
 }
 
