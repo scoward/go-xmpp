@@ -136,8 +136,8 @@ func (c *Client) init(user, passwd string) error {
 	domain := a[1]
 
 	// Declare intent to be a jabber client.
-	writeMessageOut(c.tls, fmt.Sprintf("<?xml version='1.0'?>\n"+
-		"<stream:stream to='%s' xmlns='%s'\n"+
+	writeMessageOut(c.tls, fmt.Sprintf("<?xml version='1.0'?> "+
+		"<stream:stream to='%s' xmlns='%s' "+
 		" xmlns:stream='%s' version='1.0'>\n",
 		xmlEscape(domain), nsClient, nsStream))
 
@@ -189,7 +189,7 @@ func (c *Client) init(user, passwd string) error {
 
 	// Now that we're authenticated, we're supposed to start the stream over again.
 	// Declare intent to be a jabber client.
-	writeMessageOut(c.tls, fmt.Sprintf("<stream:stream to='%s' xmlns='%s'\n"+
+	writeMessageOut(c.tls, fmt.Sprintf("<stream:stream to='%s' xmlns='%s' "+
 		" xmlns:stream='%s' version='1.0'>\n",
 		xmlEscape(domain), nsClient, nsStream))
 
@@ -208,9 +208,8 @@ func (c *Client) init(user, passwd string) error {
 
 	// Send IQ message asking to bind to the local user name.
 	//writeMessageOut(c.tls, fmt.Sprintf("<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind))
-    writeMessageOut(c.tls, fmt.Sprintf("<iq type='set' id='%s'><bind xmlns='%s'><resource>bot</resource></bind></iq>\n", user, nsBind))
-	//writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind))
-	var iq clientIQ
+	writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind))
+	/*var iq clientIQ
 	if err = c.p.DecodeElement(&iq, nil); err != nil {
 		return errors.New("unmarshal <iq>: " + err.Error())
 	}
@@ -219,13 +218,14 @@ func (c *Client) init(user, passwd string) error {
 	}
 	c.jid = iq.Bind.Jid // our local id
     fmt.Printf("JID: %d\n", c.jid)
+    */
 
 	// We're connected and can now receive and send messages.
 	//fmt.Fprintf(c.tls, "<presence xml:lang='en'><show>xa</show><status>I for one welcome our new codebot overlords.</status></presence>")
-    writeMessageOut(c.tls, fmt.Sprintf("<presence type='available'><show>chat</show><c xmlns='http://jabber.org/protocol/caps'\n"+
-                       "node='http://hipchat.com/client/bot'\n"+
-                       "ver='QgayPKawpkPSDYmwT/WM94uAlu0='/>\n"+
-                       "</presence>"))
+    writeMessageOut(c.tls, fmt.Sprintf("<presence type='available'><show>chat</show><c xmlns='http://jabber.org/protocol/caps' "+
+                       "node='http://hipchat.com/client/bot' "+
+                       "ver='telebot:0.1.0'/>"+
+                       "</presence>\n"))
 	return nil
 }
 
