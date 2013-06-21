@@ -455,7 +455,7 @@ func next(p *xml.Decoder) (xml.Name, interface{}, error) {
 	if err = p.DecodeElement(nv, &se); err != nil {
 		return xml.Name{}, nil, err
 	}
-    fmt.Printf("%+v, %+v", nv se)
+    fmt.Printf("%+v, %+v", nv, se)
 	return se.Name, nv, err
 }
 
