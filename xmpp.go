@@ -138,7 +138,7 @@ func (c *Client) init(user, passwd string) error {
 	// Declare intent to be a jabber client.
 	writeMessageOut(c.tls, fmt.Sprintf("<?xml version='1.0'?> "+
 		"<stream:stream to='%s' xmlns='%s' "+
-		" xmlns:stream='%s' version='1.0'>\n",
+		" xmlns:stream='%s' version='1.0'>",
 		xmlEscape(domain), nsClient, nsStream))
 
 	// Server should respond with a stream opening.
@@ -172,7 +172,7 @@ func (c *Client) init(user, passwd string) error {
 	raw := "\x00" + user + "\x00" + passwd
 	enc := make([]byte, base64.StdEncoding.EncodedLen(len(raw)))
 	base64.StdEncoding.Encode(enc, []byte(raw))
-	writeMessageOut(c.tls, fmt.Sprintf("<auth xmlns='%s' mechanism='PLAIN'>%s</auth>\n",
+	writeMessageOut(c.tls, fmt.Sprintf("<auth xmlns='%s' mechanism='PLAIN'>%s</auth>",
 		nsSASL, enc))
 
 	// Next message should be either success or failure.
@@ -187,11 +187,9 @@ func (c *Client) init(user, passwd string) error {
 		return errors.New("expected <success> or <failure>, got <" + name.Local + "> in " + name.Space)
 	}
 
-    /*
-	// Now that we're authenticated, we're supposed to start the stream over again.
 	// Declare intent to be a jabber client.
 	writeMessageOut(c.tls, fmt.Sprintf("<stream:stream to='%s' xmlns='%s' "+
-		" xmlns:stream='%s' version='1.0'>\n",
+		" xmlns:stream='%s' version='1.0'>",
 		xmlEscape(domain), nsClient, nsStream))
 
 	// Here comes another <stream> and <features>.
@@ -206,11 +204,11 @@ func (c *Client) init(user, passwd string) error {
 		// TODO: often stream stop.
 		//return os.NewError("unmarshal <features>: " + err.String())
 	}
-    */
 
+    writeMessageOut(c.tls, fmt.Sprintf("<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"))
 	// Send IQ message asking to bind to the local user name.
 	//writeMessageOut(c.tls, fmt.Sprintf("<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind))
-	writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind))
+	writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>", nsBind))
 	/*var iq clientIQ
 	if err = c.p.DecodeElement(&iq, nil); err != nil {
 		return errors.New("unmarshal <iq>: " + err.Error())
@@ -227,7 +225,7 @@ func (c *Client) init(user, passwd string) error {
     writeMessageOut(c.tls, fmt.Sprintf("<presence type='available'><show>chat</show><c xmlns='http://jabber.org/protocol/caps' "+
                        "node='http://hipchat.com/client/bot' "+
                        "ver='telebot:0.1.0'/>"+
-                       "</presence>\n"))
+                       "</presence>"))
 	return nil
 }
 
