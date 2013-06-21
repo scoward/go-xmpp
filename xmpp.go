@@ -187,6 +187,7 @@ func (c *Client) init(user, passwd string) error {
 		return errors.New("expected <success> or <failure>, got <" + name.Local + "> in " + name.Space)
 	}
 
+    /*
 	// Now that we're authenticated, we're supposed to start the stream over again.
 	// Declare intent to be a jabber client.
 	writeMessageOut(c.tls, fmt.Sprintf("<stream:stream to='%s' xmlns='%s' "+
@@ -205,6 +206,7 @@ func (c *Client) init(user, passwd string) error {
 		// TODO: often stream stop.
 		//return os.NewError("unmarshal <features>: " + err.String())
 	}
+    */
 
 	// Send IQ message asking to bind to the local user name.
 	//writeMessageOut(c.tls, fmt.Sprintf("<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind))
