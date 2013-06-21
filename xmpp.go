@@ -205,10 +205,10 @@ func (c *Client) init(user, passwd string) error {
 		//return os.NewError("unmarshal <features>: " + err.String())
 	}
 
-    writeMessageOut(c.tls, fmt.Sprintf("<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"))
 	// Send IQ message asking to bind to the local user name.
 	//writeMessageOut(c.tls, fmt.Sprintf("<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind))
 	writeMessageOut(c.tls, fmt.Sprintf("<bind xmlns='%s'><resource>bot</resource></bind>", nsBind))
+    writeMessageOut(c.tls, fmt.Sprintf("<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"))
 	/*var iq clientIQ
 	if err = c.p.DecodeElement(&iq, nil); err != nil {
 		return errors.New("unmarshal <iq>: " + err.Error())
