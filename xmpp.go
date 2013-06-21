@@ -172,8 +172,8 @@ func (c *Client) init(user, passwd string) error {
 	raw := "\x00" + user + "\x00" + passwd
 	enc := make([]byte, base64.StdEncoding.EncodedLen(len(raw)))
 	base64.StdEncoding.Encode(enc, []byte(raw))
-	writeMessageOut(c.tls, fmt.Sprintf("<auth xmlns='%s' mechanism='PLAIN'>NDMzOTdfMzA1NDAwQGNoYXQuaGlwY2hhdC5jb20ANDMzOTdfMzA1NDAwAEFsdEF2MXN0QQ==</auth>",
-		nsSASL))
+	writeMessageOut(c.tls, fmt.Sprintf("<auth xmlns='%s' mechanism='PLAIN'>%s</auth>",
+		nsSASL, enc))
 
 	// Next message should be either success or failure.
 	name, val, err := next(c.p)
