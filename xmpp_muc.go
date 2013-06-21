@@ -19,7 +19,7 @@ const (
 // xep-0045 7.2
 func (c *Client) JoinMUC(jid string) {
 	writeMessageOut(c.tls, fmt.Sprintf("<presence to='%s'>"+
-		"<x xmlns='%s'></x>i"+
+		"<x xmlns='%s'></x>"+
 		"</presence>",
 		xmlEscape(jid), nsMUC))
 }
