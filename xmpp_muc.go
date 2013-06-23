@@ -18,22 +18,22 @@ const (
 
 // xep-0045 7.2
 func (c *Client) JoinMUC(jid string) {
-	writeMessageOut(c.tls, fmt.Sprintf("<presence to='%s'>"+
-		"<x xmlns='%s'></x>"+
+	fmt.Fprintf(c.tls, "<presence to='%s'>\n"+
+		"<x xmlns='%s' />\n"+
 		"</presence>",
-		xmlEscape(jid), nsMUC))
+		xmlEscape(jid), nsMUC)
 }
 
 func (c *Client) JoinMUCWithFrom(jid string, username string) {
-    writeMessageOut(c.tls, fmt.Sprintf("<presence to='%s'\n"+
+    fmt.Fprintf(c.tls, "<presence to='%s'\n"+
         "from='%s'>\n"+
 		"<x xmlns='%s' />\n"+
 		"</presence>",
-		xmlEscape(jid), username, nsMUC))
+		xmlEscape(jid), username, nsMUC)
 }
 
 // xep-0045 7.14
 func (c *Client) LeaveMUC(jid string) {
-	writeMessageOut(c.tls, fmt.Sprintf("<presence from='%s' to='%s' type='unavailable' />",
-		c.jid, xmlEscape(jid)))
+	fmt.Fprintf(c.tls, "<presence from='%s' to='%s' type='unavailable' />",
+		c.jid, xmlEscape(jid))
 }
