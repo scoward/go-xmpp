@@ -39,7 +39,7 @@ const (
 
 func writeMessageOut(w io.Writer, str string) {
     fmt.Printf("%s\n", str)
-    fmt.Fprintf(w, str)
+    fmt.Fprintf(w+"\n", str)
 }
 
 var DefaultConfig tls.Config
@@ -83,9 +83,9 @@ func NewClient(host, user, passwd string) (*Client, error) {
 	}
 
 	if proxy != "" {
-		writeMessageOut(c, fmt.Sprintf("CONNECT %s HTTP/1.1\r\n", host))
-		writeMessageOut(c, fmt.Sprintf("Host: %s\r\n", host))
-		writeMessageOut(c, fmt.Sprintf("\r\n"))
+		writeMessageOut(c, fmt.Sprintf("CONNECT %s HTTP/1.1\r", host))
+		writeMessageOut(c, fmt.Sprintf("Host: %s\r", host))
+		writeMessageOut(c, fmt.Sprintf("\r"))
 		br := bufio.NewReader(c)
 		req, _ := http.NewRequest("CONNECT", host, nil)
 		resp, err := http.ReadResponse(br, req)
