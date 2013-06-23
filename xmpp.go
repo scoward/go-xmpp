@@ -204,14 +204,14 @@ func (c *Client) init(user, passwd string) error {
 	// Send IQ message asking to bind to the local user name.
 	//fmt.Fprintf(c.tls, "<iq type='set' id='x'><bind xmlns='%s'/></iq>\n", nsBind)
 	fmt.Fprintf(c.tls, "<bind xmlns='%s'><resource>bot</resource></bind>\n", nsBind)
-	var iq clientIQ
+	/*var iq clientIQ
 	if err = c.p.DecodeElement(&iq, nil); err != nil {
 		return errors.New("unmarshal <iq>: " + err.Error())
 	}
 	if &iq.Bind == nil {
 		return errors.New("<iq> result missing <bind>")
 	}
-	c.jid = iq.Bind.Jid // our local id
+	c.jid = iq.Bind.Jid // our local id*/
 
 	// We're connected and can now receive and send messages.
 	//fmt.Fprintf(c.tls, "<presence xml:lang='en'><show>xa</show><status>I for one welcome our new codebot overlords.</status></presence>")
