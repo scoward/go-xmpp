@@ -39,7 +39,7 @@ const (
 
 func writeMessageOut(w io.Writer, str string) {
     fmt.Printf("%s\n", str)
-    fmt.Fprintf(w+"\n", str)
+    fmt.Fprintf(w, str+"\n")
 }
 
 var DefaultConfig tls.Config
